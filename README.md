@@ -46,9 +46,10 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 * Obtain webhook secret key and paste it in the `.env` file.
 * Run the DB and the app:
   ```
-  docker compose up -d
+  docker compose up -d --build
   ```
-* Populate data in the DB by creating customers and subscriptions.
+* Populate data in the DB by creating customers and subscriptions. 
+* You can also report usage for features using Stigg SDKs or API to trigger `measurement.reported` webhook events.
 
 ### Debugging
 
@@ -57,17 +58,41 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 3. Start the app by running `yarn watch`
 
 
-### GraphQL API
+### Explore the data using GraphQL API
 
 You can access the GraphiQL interactive UI at `http://localhost:8080/graphiql` and run queries like:
 
 ```graphql
-query {
-  TBD
+query CustomersAndSubscriptions {
+  customers {
+    totalCount
+    nodes {
+      createdAt
+      updatedAt
+      customerId
+      name
+      email
+      entitlements
+      subscriptions(condition: {status: "ACTIVE"}) {
+        nodes {
+          createdAt
+          updatedAt
+          subscriptionId
+          planId
+          planName
+          status
+          startDate
+          endDate
+        }
+      }
+    }
+  }
 }
 ```
 
-### Access check (REST)
+![GraphiQL](docs/images/graphiql.png)
+
+### Perform access checks
 
 You can execute the request below to check if a customer has access to a specific feature:
 
