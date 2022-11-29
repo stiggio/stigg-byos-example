@@ -1,4 +1,4 @@
-import { DB, parseEntitlementsJson } from './db';
+import { DB } from './db';
 import {
   CustomerEvent,
   EntitlementsUpdatedEvent,

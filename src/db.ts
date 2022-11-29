@@ -1,5 +1,5 @@
 import { Knex, knex } from 'knex';
-import { EntitlementInfo } from "./event-types";
+import { EntitlementInfo } from './event-types';
 
 interface Customer {
   created_at: Date;
@@ -9,10 +9,6 @@ interface Customer {
   email: string | null;
   billing_id: string | null;
   entitlements: Array<EntitlementInfo>;
-}
-
-export function parseEntitlementsJson(json: string){
-  return JSON.parse(json) as EntitlementInfo[];
 }
 
 interface Subscription {
