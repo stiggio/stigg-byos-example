@@ -11,15 +11,12 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 
 * [/db](/db) - contains the DB schema init script and Dockerfile for the Postgres DB
 * [/src](/src) - contains the application code:
-* [/src/index.ts](/src/index.ts) - Express app entry point, initializes the DB connection and the webhook listener
-* Entrypoint at [index.js](authorizer/index.js)
-* Route definitions at [routes.js](authorizer/routes.js)
-* Stigg's feature definitions at [features.js](authorizer/features.js)
-* Business logic to determine access at [checkRouteEntitlements.js](authorizer/checkRouteEntitlements.js)
+  * [/src/index.ts](/src/index.ts) - Express app entry point
+  * [/src/db.ts](/src/db.ts) - initializes the DB connection using [Knex](http://knexjs.org/)
+  * [/src/event-processor.ts](/src/event-processor.ts) - Processes incoming events and persists the state in the DB 
+  * [/src/event-types.ts](/src/event-types.ts) - Typescript helper types for the webhook events 
+  * [/src/access-checker.ts](/src/access-checker.ts) - Implements the access check logic
 
-## Deployment
-
-The can run both the DB and the app easily by using `docker compose up` command from the terminal, after cloning the repository.
 
 ### Requirements
 
@@ -53,18 +50,29 @@ The can run both the DB and the app easily by using `docker compose up` command 
   ```
 * Populate data in the DB by creating customers and subscriptions.
 
+### Debugging
 
-### Running REST calls
+1. Start the DB in the background by running `docker compose up -d db` in a separate terminal
+2. Change the `DATABASE_URL` in the `.env` to `postgres://postgres:password@localhost:5432/byos_example`
+3. Start the app by running `yarn watch`
+
+
+### GraphQL API
 
 You can access the GraphiQL interactive UI at `http://localhost:8080/graphiql` and run queries like:
 
 ```graphql
-TBD
+query {
+  TBD
+}
 ```
 
-### Running REST calls
+### Access check (REST)
 
-The below is example of available REST request:
+You can execute the request below to check if a customer has access to a specific feature:
+
+```bash
+
 ```bash
 curl --location --request POST 'http://localhost:8080/check-access' \
 --header 'Content-Type: application/json' \
@@ -75,3 +83,14 @@ The following placeholders should be replaced:
 * `{{feature-id}}` should be replaced with an ID of a feature.
 * `{{customer-id}}` should be replaced with an ID of a customer.
 * `{{requested-usage}` should be replaced with an amount of requested usage.
+
+Response (has access):
+```json
+{"hasAccess":true}
+```
+
+Response (no access):
+```json
+{"hasAccess":false, "reason":"..."}
+```
+```
