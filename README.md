@@ -9,7 +9,7 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 
 ## Project structure
 
-* [/db](./db) - contains the DB schema init script and Dockerfile for the Postgres DB
+* [/db](./db) - contains the DB schema init script
 * [/src](./src) - contains the application code:
   * [index.ts](./src/index.ts) - Express app entry point
   * [db.ts](./src/db.ts) - initializes the DB connection using [Knex](http://knexjs.org/)
