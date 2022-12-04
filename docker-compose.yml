@@ -3,17 +3,14 @@ services:
   db:
     container_name: byos-db
     restart: always
-    image: byos-db
-    build:
-      context: ./db
+    image: postgres:14.0-alpine
     volumes:
       - db:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
     env_file:
       - ./.env
-    networks:
-      - network
     ports:
-      - 5432:5432
+      - 5433:5432
   graphql:
     container_name: byos-app
     restart: always
@@ -24,12 +21,7 @@ services:
       - ./.env
     depends_on:
       - db
-    networks:
-      - network
     ports:
       - 8080:8080
-networks:
-  network:
-
 volumes:
   db:

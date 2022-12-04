@@ -9,13 +9,13 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 
 ## Project structure
 
-* [/db](/db) - contains the DB schema init script and Dockerfile for the Postgres DB
-* [/src](/src) - contains the application code:
-  * [/src/index.ts](/src/index.ts) - Express app entry point
-  * [/src/db.ts](/src/db.ts) - initializes the DB connection using [Knex](http://knexjs.org/)
-  * [/src/event-processor.ts](/src/event-processor.ts) - Processes incoming events and persists the state in the DB 
-  * [/src/event-types.ts](/src/event-types.ts) - Typescript helper types for the webhook events 
-  * [/src/access-checker.ts](/src/access-checker.ts) - Implements the access check logic
+* [/db](./db) - contains the DB schema init script and Dockerfile for the Postgres DB
+* [/src](./src) - contains the application code:
+  * [index.ts](./src/index.ts) - Express app entry point
+  * [db.ts](./src/db.ts) - initializes the DB connection using [Knex](http://knexjs.org/)
+  * [event-processor.ts](./src/event-processor.ts) - Processes incoming events and persists the state in the DB 
+  * [event-types.ts](./src/event-types.ts) - Typescript helper types for the webhook events 
+  * [access-checker.ts](./src/access-checker.ts) - Implements the access check logic
 
 
 ### Requirements
@@ -27,7 +27,7 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 
 * Clone the repository:
   ```
-  git clone git@github.com:stiggio/stigg-aws-api-gateway-example.git
+  git clone git@github.com:stiggio/stigg-byos-example.git
   ```
 * Install [ngrok](https://ngrok.com/) and run it on port 8080:
   ```
@@ -37,12 +37,14 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
   * `customer.created`
   * `customer.updated`
   * `customer.deleted`
+  * `entitlements.updated`
+  * `measurement.reported`
   * `subscription.created`
   * `subscription.updated`
-  * `subscription.deleted`
-  * `entitlement.created`
-  * `entitlement.updated`
-  * `entitlement.deleted`
+  * `subscription.canceled`
+  * `subscription.expired`
+  * `subscription.trial_expired`
+* Rename `.env.template` to `.env` 
 * Obtain webhook secret key and paste it in the `.env` file.
 * Run the DB and the app:
   ```
@@ -54,7 +56,7 @@ You can read about it the [docs](https://docs.stigg.io/docs/byos).
 ### Debugging
 
 1. Start the DB in the background by running `docker compose up -d db` in a separate terminal
-2. Change the `DATABASE_URL` in the `.env` to `postgres://postgres:password@localhost:5432/byos_example`
+2. Change the `DATABASE_URL` in the `.env` to `postgres://postgres:password@localhost:5433/byos_example`
 3. Start the app by running `yarn watch`
 
 
@@ -101,13 +103,13 @@ You can execute the request below to check if a customer has access to a specifi
 ```bash
 curl --location --request POST 'http://localhost:8080/check-access' \
 --header 'Content-Type: application/json' \
---data-raw '{"featureId": "{{feature-id}}", "customerId": "{{customer-id}}", "requestedUsage": {{requested-usage}}'
+--data-raw '{"featureId": "{{feature-id}}", "customerId": "{{customer-id}}", "requestedUsage": {{requested-usage}}}'
 ```
 
 The following placeholders should be replaced:
 * `{{feature-id}}` should be replaced with an ID of a feature.
 * `{{customer-id}}` should be replaced with an ID of a customer.
-* `{{requested-usage}` should be replaced with an amount of requested usage.
+* `{{requested-usage}}` should be replaced with an amount of requested usage.
 
 Response (has access):
 ```json
