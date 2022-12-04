@@ -2,10 +2,12 @@
 
 This repository demonstrates an integration with Stigg for existing entitlement management solution.
 To be more specific, the example app does not depend on Stigg SDKs or APIs, but simply consumes events over webhook from Stigg (see `/webhook`), and persists the latest state in a database.
+
 The app also exposes a GraphQL API (based on [PostGraphile](https://www.graphile.org/postgraphile)), that can be accessed on `/graphql` (and `/graphiql` for interactive UI) to query the latest state of the customers, subscriptions and entitlements.
+
 Lastly, the app exposes a simple endpoint to demonstrate entitlement access and usage enforcement on `/check-access`.
 
-You can read about it the [docs](https://docs.stigg.io/docs/byos).
+You can read more about this project in the [docs](https://docs.stigg.io/docs/byos).
 
 ## Project structure
 
