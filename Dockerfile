@@ -1,5 +1,10 @@
 FROM node:alpine
 
+RUN addgroup --system <group>
+RUN adduser --system <user> --ingroup <group>
+USER <user>:<group>
+
+
 WORKDIR /app
 
 # Copy dependencies
